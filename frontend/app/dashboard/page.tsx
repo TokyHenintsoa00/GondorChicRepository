@@ -34,7 +34,7 @@ export default function Dashboard() {
         Bienvenue, {token.pseudo}
       </p>
       <p className="text-[#6b3a1f] text-sm font-serif italic">
-        Token : <span className="font-mono">{token.value}</span>
+        <span className="font-mono">Veuillez consulter les rubriques des produits!</span>
       </p>
       <button
         onClick={() => {
