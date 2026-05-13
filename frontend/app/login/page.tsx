@@ -118,18 +118,6 @@ export default function LoginPage() {
         </form>
       </div>
 
-      {/* footer   */}
-      <footer className="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-2 pb-8 pointer-events-none">
-        <svg viewBox="0 0 300 10" fill="none" aria-hidden="true" className="w-48 opacity-60">
-          <line x1="0" y1="5" x2="300" y2="5" stroke="#3d1e00" strokeWidth="0.8" strokeDasharray="4,5" />
-        </svg>
-        <p
-          className="text-[11px] italic tracking-[0.18em] text-[#7a4e20] opacity-80"
-          style={{ fontFamily: "var(--font-cinzel)" }}
-        >
-          Groupe D Dil
-        </p>
-      </footer>
     </div>
   );
 }
