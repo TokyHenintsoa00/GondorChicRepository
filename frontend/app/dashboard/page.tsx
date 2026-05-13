@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { GcToken } from "../login/actions";
+import type { GcToken } from "../accueil/actions";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -11,13 +11,13 @@ export default function Dashboard() {
   useEffect(() => {
     const raw = localStorage.getItem("gc_auth");
     if (!raw) {
-      router.replace("/login");
+      router.replace("/accueil");
       return;
     }
     const parsed: GcToken = JSON.parse(raw);
     if (Date.now() > parsed.expiresAt) {
       localStorage.removeItem("gc_auth");
-      router.replace("/login");
+      router.replace("/accueil");
       return;
     }
     setToken(parsed);
