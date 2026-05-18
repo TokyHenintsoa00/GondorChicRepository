@@ -2,8 +2,8 @@
 # FRONTEND (Next.js / React)
 # =========================================================
 
-# dependencies
-/frontend/node_modules
+# Dependencies
+/frontend/node_modules/
 /frontend/.pnp
 /frontend/.pnp.*
 /frontend/.yarn/*
@@ -12,65 +12,139 @@
 !/frontend/.yarn/releases
 !/frontend/.yarn/versions
 
-# testing
-/frontend/coverage
+# Testing
+/frontend/coverage/
 
-# next.js
+# Next.js build output
 /frontend/.next/
 /frontend/out/
 
-# production
-/frontend/build
+# Production build
+/frontend/build/
 
-# env files
-/frontend/.env*
+# Environment files (toutes variantes)
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development
+/frontend/.env.development.local
+/frontend/.env.test
+/frontend/.env.test.local
+/frontend/.env.production
+/frontend/.env.production.local
 
-# vercel
-/frontend/.vercel
+# Vercel
+/frontend/.vercel/
 
-# typescript
+# TypeScript
 /frontend/*.tsbuildinfo
 /frontend/next-env.d.ts
+
+# Storybook (si utilisé)
+/frontend/storybook-static/
+
+# PWA / next-pwa
+/frontend/public/sw.js
+/frontend/public/workbox-*.js
 
 
 # =========================================================
 # BACKEND (Spring Boot / Maven)
 # =========================================================
 
-# Maven target
+# Maven build output
 /backend/target/
 
-# logs
+# Gradle (si migration ou multi-module)
+/backend/.gradle/
+/backend/build/
+/backend/gradle/wrapper/gradle-wrapper.jar
+
+# Logs applicatifs
 /backend/*.log
+/backend/logs/
 
-# env
-/backend/.env*
+# Environment & secrets
+/backend/.env
+/backend/.env.*
+/backend/src/main/resources/application-local.properties
+/backend/src/main/resources/application-local.yml
+/backend/src/main/resources/application-secret*.properties
+/backend/src/main/resources/application-secret*.yml
 
-# generated files
+# Fichiers générés par les IDEs (Eclipse / STS)
 /backend/.classpath
 /backend/.project
 /backend/.settings/
+/backend/.factorypath
+
+# Fichiers JAXB / APT générés
+/backend/src/main/generated/
+
+# Spring Boot DevTools
+/backend/.devtools
 
 
 # =========================================================
 # GLOBAL
 # =========================================================
 
-# misc
+# macOS
 .DS_Store
-*.pem
+.AppleDouble
+.LSOverride
 
-# debug logs
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Certificats et clés
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+
+# Debug logs (Node / npm / yarn / pnpm)
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# IDEs
+# IDEs — JetBrains (IntelliJ, WebStorm…)
 .idea/
 *.iml
+*.iws
+*.ipr
+out/
 
+# IDE — VS Code
 .vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
 
-# OS files
-Thumbs.db
+# IDE — Eclipse / STS (racine)
+.classpath
+.project
+.settings/
+.factorypath
+
+# Docker (fichiers locaux non versionnés)
+.docker/
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Terraform / IaC (si DevOps)
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
