@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body {
+  min-height: 100vh;
+}
+
+.parchment-bg {
+  background-color: #f0d59e;
+  background-image:
+    radial-gradient(ellipse at 12% 22%, rgba(160, 105, 40, 0.32) 0%, transparent 52%),
+    radial-gradient(ellipse at 88% 78%, rgba(135, 88, 35, 0.26) 0%, transparent 50%),
+    radial-gradient(ellipse at 78% 18%, rgba(170, 120, 50, 0.2) 0%, transparent 45%),
+    radial-gradient(ellipse at 22% 85%, rgba(115, 75, 28, 0.2) 0%, transparent 45%);
+}
