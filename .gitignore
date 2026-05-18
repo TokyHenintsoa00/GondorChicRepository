@@ -77,3 +77,6 @@ Thumbs.db
 
 # instructions
 .github/copilot-instructions.md
+
+# data
+backend/src/main/resources/application.properties

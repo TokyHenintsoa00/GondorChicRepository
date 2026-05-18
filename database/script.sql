@@ -34,7 +34,7 @@ CREATE TABLE Produit (
 -- Create Client table
 CREATE TABLE Client (
     id SERIAL PRIMARY KEY,
-    numero_client VARCHAR(10) NOT NULL,
+    numero_client VARCHAR(10) NOT NULL UNIQUE,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     pseudo VARCHAR(50) NOT NULL,
