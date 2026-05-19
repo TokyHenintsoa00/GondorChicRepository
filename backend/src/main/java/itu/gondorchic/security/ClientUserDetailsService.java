@@ -1,7 +1,6 @@
-package itu.BackendGondorChic.client.service;
+package itu.gondorchic.security;
 
-import java.util.Collections;
-
+import itu.gondorchic.client.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -10,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import itu.BackendGondorChic.client.repository.ClientRepository;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +19,13 @@ public class ClientUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String pseudo) throws UsernameNotFoundException {
-        itu.BackendGondorChic.client.entity.Client client = clientRepository.findByPseudo(pseudo)
+        itu.gondorchic.client.entity.Client client = clientRepository.findByPseudo(pseudo)
                 .orElseThrow(() -> new UsernameNotFoundException("Client introuvable: " + pseudo));
 
         return new User(
                 client.getPseudo(),
                 client.getMdp(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT"))
+                List.of(new SimpleGrantedAuthority("ROLE_CLIENT"))
         );
     }
 }

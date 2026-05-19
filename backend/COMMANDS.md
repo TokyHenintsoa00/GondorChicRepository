@@ -26,3 +26,4 @@ mvnw spring-boot:run "-Dspring-boot.run.profiles=seed"
 | Leporteur | !totoXXS |
 | Lebrave | titiXXL |
 | Pippin | tataXS! |
+| Necromancien | saruXXS! |

@@ -1,16 +1,15 @@
-package itu.BackendGondorChic.client.controller;
+package itu.gondorchic.client.controller;
 
+import itu.gondorchic.client.dto.AuthResponse;
+import itu.gondorchic.client.dto.ClientLoginRequest;
+import itu.gondorchic.client.service.ClientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.validation.Valid;
-import itu.BackendGondorChic.client.dto.AuthResponse;
-import itu.BackendGondorChic.client.dto.ClientLoginRequest;
-import itu.BackendGondorChic.client.service.ClientService;
 
 @RestController
 @RequestMapping("/api/auth")

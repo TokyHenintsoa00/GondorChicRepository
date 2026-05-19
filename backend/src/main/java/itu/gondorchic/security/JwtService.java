@@ -1,17 +1,15 @@
-package itu.BackendGondorChic.security;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+package itu.gondorchic.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Service
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+@Component
 public class JwtService {
 
     private final SecretKey secretKey;
@@ -25,12 +23,10 @@ public class JwtService {
 
     public String generateToken(String subject) {
         Date now = new Date();
-        Date expiry = new Date(now.getTime() + expirationMs);
-
         return Jwts.builder()
                 .subject(subject)
                 .issuedAt(now)
-                .expiration(expiry)
+                .expiration(new Date(now.getTime() + expirationMs))
                 .signWith(secretKey)
                 .compact();
     }
@@ -48,7 +44,7 @@ public class JwtService {
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
-        } catch (Exception exception) {
+        } catch (Exception e) {
             return false;
         }
     }

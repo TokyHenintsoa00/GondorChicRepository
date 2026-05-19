@@ -1,10 +1,9 @@
-package itu.BackendGondorChic.client.repository;
+package itu.gondorchic.client.repository;
 
-import java.util.Optional;
-
+import itu.gondorchic.client.entity.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import itu.BackendGondorChic.client.entity.Client;
+import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
