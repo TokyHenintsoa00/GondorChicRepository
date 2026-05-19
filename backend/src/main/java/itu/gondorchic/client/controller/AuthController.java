@@ -1,5 +1,6 @@
 package itu.gondorchic.client.controller;
 
+import itu.gondorchic.common.ApiResponse;
 import itu.gondorchic.client.dto.AuthResponse;
 import itu.gondorchic.client.dto.ClientLoginRequest;
 import itu.gondorchic.client.service.ClientService;
@@ -19,7 +20,7 @@ public class AuthController {
     private final ClientService clientService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody ClientLoginRequest request) {
-        return ResponseEntity.ok(clientService.login(request));
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody ClientLoginRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(clientService.login(request), "Connexion réussie"));
     }
 }
