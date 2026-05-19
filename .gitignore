@@ -74,3 +74,9 @@ yarn-error.log*
 
 # OS files
 Thumbs.db
+
+# instructions
+.github/copilot-instructions.md
+
+# data
+backend/src/main/resources/application.properties
