@@ -48,7 +48,7 @@ export default function LoginPage() {
   useEffect(() => {
     if ("token" in state && state.token) {
       localStorage.setItem("gc_auth", JSON.stringify(state.token));
-      router.push("/dashboard");
+      router.push("/accueil-perso");
     }
   }, [state, router]);
 
