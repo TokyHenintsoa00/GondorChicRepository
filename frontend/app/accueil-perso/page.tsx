@@ -49,14 +49,13 @@ export default function AccueilPerso() {
     return JSON.parse(raw);
   };
 
-  const parsedUser = getUserFromStorage();
-
+  
   useEffect(() => {
+    const parsedUser = getUserFromStorage();
     setUser(parsedUser);
   }, [router]);
 
   useEffect(() => {
-    getTokenFromStorage();
     const parsed = getTokenFromStorage();
     setToken(parsed);
   }, [router]);
