@@ -1,5 +1,6 @@
 package itu.gondorchic.client.controller;
 
+import itu.gondorchic.common.ApiResponse;
 import itu.gondorchic.client.dto.ClientResponse;
 import itu.gondorchic.client.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping("/me")
-    public ResponseEntity<ClientResponse> me(Authentication authentication) {
-        return ResponseEntity.ok(clientService.getByPseudo(authentication.getName()));
+    public ResponseEntity<ApiResponse<ClientResponse>> me(Authentication authentication) {
+        return ResponseEntity.ok(ApiResponse.ok(clientService.getByPseudo(authentication.getName())));
     }
 }

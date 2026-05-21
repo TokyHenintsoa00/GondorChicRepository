@@ -1,4 +1,4 @@
--- Active: 1753683184075@@127.0.0.1@5432@gondor_chic
+-- Active: 1779306464656@@127.0.0.1@5432@gondor_chic
 -- =============================================
 -- GONDOR CHIC - Database Schema
 -- MCD Implementation
@@ -6,13 +6,14 @@
 
 -- Create Catalogue table
 CREATE TABLE Catalogue (
-    id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    nom_catalogue VARCHAR(100) NOT NULL
 );
 
 -- Create Catégorie table
 CREATE TABLE Categorie (
     id SERIAL PRIMARY KEY,
-    nom_categorie VARCHAR(10) NOT NULL,
+    nom_categorie VARCHAR(100) NOT NULL,
     catalogue_id INT NOT NULL,
     FOREIGN KEY (catalogue_id) REFERENCES Catalogue(id)
 );
