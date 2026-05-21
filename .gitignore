@@ -83,6 +83,9 @@
 # Spring Boot DevTools
 /backend/.devtools
 
+# Application properties
+application.properties
+
 
 # =========================================================
 # GLOBAL
