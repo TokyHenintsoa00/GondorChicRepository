@@ -22,12 +22,12 @@ export async function login(
     return { error: "Veuillez remplir tous les champs." };
   }
 
-  const validUser = process.env.AUTH_USER ?? "admin";
-  const validPass = process.env.AUTH_PASS ?? "gondor";
+  // const validUser = process.env.AUTH_USER ?? "admin";
+  // const validPass = process.env.AUTH_PASS ?? "gondor";
 
-  if (pseudo !== validUser || password !== validPass) {
-    return { error: "Pseudo ou mot de passe incorrect." };
-  }
+  // if (pseudo !== validUser || password !== validPass) {
+  //   return { error: "Pseudo ou mot de passe incorrect." };
+  // }
 
   const token: GcToken = {
     value: `gc_${crypto.randomUUID().replace(/-/g, "")}`,
@@ -37,14 +37,22 @@ export async function login(
 
   // TODO: remplacer par le vrai appel API
   // const res = await fetch(`${process.env.API_URL}/api/auth/login`, {
-  //   method: "POST",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: JSON.stringify({ pseudo, password }),
-  // });
-  // if (!res.ok) return { error: "Pseudo ou mot de passe incorrect." };
+  const res = await fetch(`http://localhost:8080/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pseudo, password }),
+  });
+  
+  if (!res.ok) {
+    console.error("❌ Erreur API Backend, statut :", res.status);
+    return { 
+      error: "Pseudo ou mot de passe incorrect." + res.status 
+    };
+  }
 
-  // const data = await res.json();
-  // token.value = data.token;
+  const data = await res.json();
+  console.log("", data);
+  token.value = data.token;
 
   return { token };
 }

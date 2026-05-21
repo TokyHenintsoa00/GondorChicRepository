@@ -39,21 +39,46 @@ const inputClass = (hasError: boolean) =>
 
 export default function LoginPage() {
   const router = useRouter();
-  const [state, action, pending] = useActionState(login, {});
+
   const [pseudo, setPseudo] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
-  const error = "error" in state ? state.error : undefined;
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPending(true);
+    setError(null);
 
-  useEffect(() => {
-    if ("token" in state && state.token) {
-      localStorage.setItem("gc_auth", JSON.stringify(state.token));
-      router.push("/accueil-perso");
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo, mdp: password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.message || "Pseudo ou mot de passe incorrect");
+        return;
+      }
+
+      if (data.token) {
+        localStorage.setItem("gc_auth", JSON.stringify(data.token));
+        router.push("/accueil-perso");
+      } else {
+        setError("Token manquant dans la réponse");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Erreur serveur");
+    } finally {
+      setPending(false);
     }
-  }, [state, router]);
+  };
 
   return (
-    // <div className="parchment-bg relative min-h-screen overflow-hidden flex items-center justify-center">
     <div
       className="relative min-h-screen overflow-hidden flex items-center justify-center"
       style={{
@@ -63,23 +88,19 @@ export default function LoginPage() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* <div className="absolute inset-[15px] border-2 border-[#3d1e00] pointer-events-none" /> */}
-      {/* <div className="absolute inset-[24px] border border-[#3d1e00] pointer-events-none" /> */}
-
       <div className="relative z-10 flex flex-col items-center">
-        <div className="flex flex-col items-center gap-4">
-            <Image
-              src="/logo-gondor.png"          // ← adapte le nom exact du fichier
-              alt="Gondor Chic"
-              width={660}
-              height={240}
-              className="drop-shadow-sm"
-              priority
-            />
-        </div>
+
+        <Image
+          src="/logo-gondor.png"
+          alt="Gondor Chic"
+          width={660}
+          height={240}
+          className="drop-shadow-sm"
+          priority
+        />
 
         <form
-          action={action}
+          onSubmit={handleLogin}
           className="flex flex-col gap-3"
           style={{ width: "clamp(500px, 38vw, 360px)" }}
         >
@@ -92,6 +113,7 @@ export default function LoginPage() {
             onChange={(e) => setPseudo(e.target.value)}
             className={inputClass(!!error)}
           />
+
           <input
             type="password"
             name="password"
@@ -111,13 +133,12 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full bg-[#52280a] text-[#f2e4c0] rounded-md py-[13px] text-[14px] italic font-serif tracking-[0.12em] cursor-pointer transition-colors hover:bg-[#3d1e06] border-none disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full bg-[#52280a] text-[#f2e4c0] rounded-md py-[13px] text-[14px] italic font-serif tracking-[0.12em] cursor-pointer transition-colors hover:bg-[#3d1e06] disabled:opacity-60"
           >
             {pending ? "connexion…" : "s'identifier"}
           </button>
         </form>
       </div>
-
     </div>
   );
 }
