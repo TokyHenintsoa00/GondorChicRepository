@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import type { GcToken } from "../accueil/actions";
+import type { GcToken, UserLoggedIn } from "../accueil/actions";
 
 type Product = {
   id: number;
@@ -23,19 +23,41 @@ export default function AccueilPerso() {
   const [produit, setProduit] = useState<Product | null>(null);
   const [quantite, setQuantite] = useState(1);
   const [commande, setCommande] = useState(false);
+  const [user, setUser] = useState<UserLoggedIn | null>(null);
 
-  useEffect(() => {
+  const getTokenFromStorage = (): GcToken | null => {
     const raw = localStorage.getItem("gc_auth");
     if (!raw) {
       router.replace("/accueil");
-      return;
+      return null;
     }
     const parsed: GcToken = JSON.parse(raw);
     if (Date.now() > parsed.expiresAt) {
       localStorage.removeItem("gc_auth");
       router.replace("/accueil");
-      return;
+      return null;
     }
+    return parsed;
+  };
+
+  const getUserFromStorage = (): UserLoggedIn | null => {
+    const raw = localStorage.getItem("userPseudo");
+    if (!raw) {
+      router.replace("/accueil");
+      return null;
+    }
+    return JSON.parse(raw);
+  };
+
+  const parsedUser = getUserFromStorage();
+
+  useEffect(() => {
+    setUser(parsedUser);
+  }, [router]);
+
+  useEffect(() => {
+    getTokenFromStorage();
+    const parsed = getTokenFromStorage();
     setToken(parsed);
   }, [router]);
 
@@ -51,8 +73,8 @@ export default function AccueilPerso() {
     setProduit({
       id: 1,
       referenceProduit: "REF-001",
-      libelle: "Potion magique",
-      description: "Une potion aux vertus extraordinaires.",
+      libelle: "Vêtement elfique hiver",
+      description: "Un vêtement chaud et élégant pour la saison hiver.",
       prixDuJour: 28.99,
       quantiteEnStock: 10,
       estDuJour: true,
@@ -88,7 +110,7 @@ export default function AccueilPerso() {
             className="mt-4 text-[#5a3300] text-xl tracking-wide"
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
-            Bienvenue,{" "}
+            Bienvenue,{`${user?.prenom || user?.pseudo}`} !{" "}
             <span className="font-bold">{token.pseudo}</span>
           </p>
         </div>
@@ -108,7 +130,7 @@ export default function AccueilPerso() {
                 Produit du jour
               </span>
               <p className="text-3xl font-bold text-[#2a1200] mb-1">
-                ${produit.prixDuJour.toFixed(2)}
+                Gondariar {produit.prixDuJour.toFixed(2)}
               </p>
               <p className="text-sm text-[#5a3300] italic mb-7">
                 En stock : {produit.quantiteEnStock} pièce(s)

@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "./actions";
+import { login, GcToken } from './actions';
 import Image from "next/image";
 
 const BROWN = "#3d1e00";
@@ -64,8 +64,11 @@ export default function LoginPage() {
         return;
       }
 
-      if (data.token) {
-        localStorage.setItem("gc_auth", JSON.stringify(data.token));
+      console.log("data", data.data);
+
+      if (data.data.token) {
+        localStorage.setItem("gc_auth", JSON.stringify(data.data.token));
+        localStorage.setItem("userPseudo", JSON.stringify(data.data.client));
         router.push("/accueil-perso");
       } else {
         setError("Token manquant dans la réponse");
