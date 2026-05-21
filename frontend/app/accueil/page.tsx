@@ -64,7 +64,7 @@ export default function LoginPage() {
         return;
       }
 
-      console.log("data", data.data);
+      // console.log("data", data.data);
 
       if (data.data.token) {
         localStorage.setItem("gc_auth", JSON.stringify(data.data.token));
