@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { GcToken } from "../accueil/actions";
+import { getUserFromToken } from "@/lib/auth";
 
 type Product = {
   id: number;
@@ -19,28 +20,32 @@ type Product = {
 
 export default function AccueilPerso() {
   const router = useRouter();
-  const [token, setToken] = useState<GcToken | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [produit, setProduit] = useState<Product | null>(null);
   const [quantite, setQuantite] = useState(1);
   const [commande, setCommande] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const raw = localStorage.getItem("gc_auth");
-    if (!raw) {
-      router.replace("/accueil");
-      return;
-    }
-    const parsed: GcToken = JSON.parse(raw);
-    if (Date.now() > parsed.expiresAt) {
-      localStorage.removeItem("gc_auth");
-      router.replace("/accueil");
-      return;
-    }
-    setToken(parsed);
+    // const token_str = localStorage.getItem("token");
+    // setToken(token_str);
+    const userData = getUserFromToken();
+    setUser(userData);
+    // if (!raw) {
+    //   router.replace("/accueil");
+    //   return;
+    // }
+    // const parsed: GcToken = JSON.parse(raw);
+    // if (Date.now() > parsed.expiresAt) {
+    //   localStorage.removeItem("gc_auth");
+    //   router.replace("/accueil");
+    //   return;
+    // }
+    // setToken(parsed);
   }, [router]);
 
   useEffect(() => {
-    if (!token) return;
+    // if (!token) return;
     // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
     //   .then((r) => r.json())
     //   .then((data) => {
@@ -59,9 +64,9 @@ export default function AccueilPerso() {
       image: "",
       categorieId: 1,
     });
-  }, [token]);
+  }, [user]);
 
-  if (!token) return null;
+  // if (!token) return null;
 
   return (
     <div
@@ -89,7 +94,8 @@ export default function AccueilPerso() {
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
             Bienvenue,{" "}
-            <span className="font-bold">{token.pseudo}</span>
+            <span className="font-bold">{user.sub}</span>
+            {/* <span className="font-bold">{"Nicolas"}</span> */}
           </p>
         </div>
 
