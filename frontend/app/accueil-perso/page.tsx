@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import type { GcToken, UserLoggedIn } from "../accueil/actions";
+import type { GcToken } from "../accueil/actions";
+import { getUserFromToken } from "@/lib/auth";
 
 type Product = {
   id: number;
@@ -17,72 +18,46 @@ type Product = {
   categorieId: number;
 };
 
+type ClientProfile = {
+  prenom: string;
+  nom: string;
+};
+
 export default function AccueilPerso() {
   const router = useRouter();
-  const [token, setToken] = useState<GcToken | null>(null);
-  const [produit, setProduit] = useState<Product | null>(null);
+  const [user, setUser] = useState<{ sub: string } | null>(null);
+  const [profile, setProfile] = useState<ClientProfile | null>(null);
+  const [produit] = useState<Product | null>({
+    id: 1,
+    referenceProduit: "REF-001",
+    libelle: "Vêtement elfique hiver",
+    description: "Un vêtement chaud et élégant pour la saison hiver.",
+    prixDuJour: 28.99,
+    quantiteEnStock: 10,
+    estDuJour: true,
+    image: "",
+    categorieId: 1,
+  });
   const [quantite, setQuantite] = useState(1);
   const [commande, setCommande] = useState(false);
-  const [user, setUser] = useState<UserLoggedIn | null>(null);
 
-  const getTokenFromStorage = (): GcToken | null => {
-    const raw = localStorage.getItem("gc_auth");
-    if (!raw) {
-      router.replace("/accueil");
-      return null;
-    }
-    const parsed: GcToken = JSON.parse(raw);
-    if (Date.now() > parsed.expiresAt) {
-      localStorage.removeItem("gc_auth");
-      router.replace("/accueil");
-      return null;
-    }
-    return parsed;
-  };
-
-  const getUserFromStorage = (): UserLoggedIn | null => {
-    const raw = localStorage.getItem("userPseudo");
-    if (!raw) {
-      router.replace("/accueil");
-      return null;
-    }
-    return JSON.parse(raw);
-  };
-
-  
   useEffect(() => {
-    const parsedUser = getUserFromStorage();
-    setUser(parsedUser);
+    const userData = getUserFromToken();
+    if (!userData) {
+      router.replace("/accueil");
+      return;
+    }
+    setUser(userData as { sub: string });
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:8080/api/clients/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => setProfile({ prenom: data.data.prenom, nom: data.data.nom }))
+      .catch(() => {});
   }, [router]);
 
-  useEffect(() => {
-    const parsed = getTokenFromStorage();
-    setToken(parsed);
-  }, [router]);
-
-  useEffect(() => {
-    if (!token) return;
-    // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
-    //   .then((r) => r.json())
-    //   .then((data) => {
-    //     const list: Product[] = data.data ?? [];
-    //     setProduit(list.find((p) => p.estDuJour) ?? list[0] ?? null);
-    //   })
-    //   .catch(() => {});
-    setProduit({
-      id: 1,
-      referenceProduit: "REF-001",
-      libelle: "Vêtement elfique hiver",
-      description: "Un vêtement chaud et élégant pour la saison hiver.",
-      prixDuJour: 28.99,
-      quantiteEnStock: 10,
-      estDuJour: true,
-      image: "",
-      categorieId: 1,
-    });
-  }, [token]);
-
-  if (!token) return null;
+  // if (!token) return null;
 
   return (
     <div
@@ -109,8 +84,9 @@ export default function AccueilPerso() {
             className="mt-4 text-[#5a3300] text-xl tracking-wide"
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
-            Bienvenue,{`${user?.prenom || user?.pseudo}`} !{" "}
-            <span className="font-bold">{token.pseudo}</span>
+            Bienvenue,{" "}
+            <span className="font-bold">{profile ? `${profile.prenom} ${profile.nom}` : user?.sub}</span>
+            {/* <span className="font-bold">{"Nicolas"}</span> */}
           </p>
         </div>
 
@@ -200,7 +176,7 @@ export default function AccueilPerso() {
         <div className="mt-8 flex justify-end">
           <button
             onClick={() => {
-              localStorage.removeItem("gc_auth");
+              localStorage.removeItem("token");
               router.push("/accueil");
             }}
             className="text-xs text-[#6b3a1f] italic underline hover:text-[#2a1200] transition-colors cursor-pointer"
