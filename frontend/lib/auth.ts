@@ -1,13 +1,13 @@
 import { jwtDecode } from "jwt-decode";
 
 export function getToken() {
+  if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
 }
 
 export function isTokenExpired(token: string) {
   try {
-    const decoded: any = jwtDecode(token);
-
+    const decoded = jwtDecode<{ exp: number }>(token);
     return decoded.exp * 1000 < Date.now();
   } catch {
     return true;

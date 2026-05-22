@@ -18,9 +18,15 @@ type Product = {
   categorieId: number;
 };
 
+type ClientProfile = {
+  prenom: string;
+  nom: string;
+};
+
 export default function AccueilPerso() {
   const router = useRouter();
-  const [user] = useState(() => getUserFromToken());
+  const [user, setUser] = useState<{ sub: string } | null>(null);
+  const [profile, setProfile] = useState<ClientProfile | null>(null);
   const [produit] = useState<Product | null>({
     id: 1,
     referenceProduit: "REF-001",
@@ -36,10 +42,20 @@ export default function AccueilPerso() {
   const [commande, setCommande] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    const userData = getUserFromToken();
+    if (!userData) {
       router.replace("/accueil");
+      return;
     }
-  }, [user, router]);
+    setUser(userData as { sub: string });
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:8080/api/clients/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => setProfile({ prenom: data.data.prenom, nom: data.data.nom }))
+      .catch(() => {});
+  }, [router]);
 
   // if (!token) return null;
 
@@ -69,7 +85,7 @@ export default function AccueilPerso() {
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
             Bienvenue,{" "}
-            <span className="font-bold">{user?.sub}</span>
+            <span className="font-bold">{profile ? `${profile.prenom} ${profile.nom}` : user?.sub}</span>
             {/* <span className="font-bold">{"Nicolas"}</span> */}
           </p>
         </div>
