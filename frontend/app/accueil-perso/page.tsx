@@ -94,7 +94,7 @@ export default function AccueilPerso() {
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
             Bienvenue,{" "}
-            <span className="font-bold">{user.sub}</span>
+            <span className="font-bold">{user?.sub}</span>
             {/* <span className="font-bold">{"Nicolas"}</span> */}
           </p>
         </div>
