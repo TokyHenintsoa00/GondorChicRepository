@@ -6,6 +6,13 @@ export type GcToken = {
   expiresAt: number;
 };
 
+export type UserLoggedIn = {
+  pseudo: string;
+  prenom: string;
+  nom: string;
+  numeroClient: string;
+}
+
 export type LoginState =
   | { token: GcToken }
   | { error: string }

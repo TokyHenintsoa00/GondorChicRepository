@@ -3,8 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+<<<<<<< HEAD
 import type { GcToken } from "../accueil/actions";
 import { getUserFromToken } from "@/lib/auth";
+=======
+import type { GcToken, UserLoggedIn } from "../accueil/actions";
+>>>>>>> 2b9249ef22705e5e81b1681dc55ff6f6451128c5
 
 type Product = {
   id: number;
@@ -56,8 +60,8 @@ export default function AccueilPerso() {
     setProduit({
       id: 1,
       referenceProduit: "REF-001",
-      libelle: "Potion magique",
-      description: "Une potion aux vertus extraordinaires.",
+      libelle: "Vêtement elfique hiver",
+      description: "Un vêtement chaud et élégant pour la saison hiver.",
       prixDuJour: 28.99,
       quantiteEnStock: 10,
       estDuJour: true,
@@ -93,9 +97,14 @@ export default function AccueilPerso() {
             className="mt-4 text-[#5a3300] text-xl tracking-wide"
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
+<<<<<<< HEAD
             Bienvenue,{" "}
             <span className="font-bold">{user.sub}</span>
             {/* <span className="font-bold">{"Nicolas"}</span> */}
+=======
+            Bienvenue,{`${user?.prenom || user?.pseudo}`} !{" "}
+            <span className="font-bold">{token.pseudo}</span>
+>>>>>>> 2b9249ef22705e5e81b1681dc55ff6f6451128c5
           </p>
         </div>
 
@@ -114,7 +123,7 @@ export default function AccueilPerso() {
                 Produit du jour
               </span>
               <p className="text-3xl font-bold text-[#2a1200] mb-1">
-                ${produit.prixDuJour.toFixed(2)}
+                Gondariar {produit.prixDuJour.toFixed(2)}
               </p>
               <p className="text-sm text-[#5a3300] italic mb-7">
                 En stock : {produit.quantiteEnStock} pièce(s)

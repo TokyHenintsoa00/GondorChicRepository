@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "./actions";
+import { login, GcToken } from './actions';
 import Image from "next/image";
 
 const BROWN = "#3d1e00";
