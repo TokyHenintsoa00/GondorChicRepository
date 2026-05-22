@@ -20,51 +20,26 @@ type Product = {
 
 export default function AccueilPerso() {
   const router = useRouter();
-  const [token, setToken] = useState<string | null>(null);
-  const [produit, setProduit] = useState<Product | null>(null);
+  const [user] = useState(() => getUserFromToken());
+  const [produit] = useState<Product | null>({
+    id: 1,
+    referenceProduit: "REF-001",
+    libelle: "Vêtement elfique hiver",
+    description: "Un vêtement chaud et élégant pour la saison hiver.",
+    prixDuJour: 28.99,
+    quantiteEnStock: 10,
+    estDuJour: true,
+    image: "",
+    categorieId: 1,
+  });
   const [quantite, setQuantite] = useState(1);
   const [commande, setCommande] = useState(false);
-  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    // const token_str = localStorage.getItem("token");
-    // setToken(token_str);
-    const userData = getUserFromToken();
-    setUser(userData);
-    // if (!raw) {
-    //   router.replace("/accueil");
-    //   return;
-    // }
-    // const parsed: GcToken = JSON.parse(raw);
-    // if (Date.now() > parsed.expiresAt) {
-    //   localStorage.removeItem("gc_auth");
-    //   router.replace("/accueil");
-    //   return;
-    // }
-    // setToken(parsed);
-  }, [router]);
-
-  useEffect(() => {
-    // if (!token) return;
-    // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
-    //   .then((r) => r.json())
-    //   .then((data) => {
-    //     const list: Product[] = data.data ?? [];
-    //     setProduit(list.find((p) => p.estDuJour) ?? list[0] ?? null);
-    //   })
-    //   .catch(() => {});
-    setProduit({
-      id: 1,
-      referenceProduit: "REF-001",
-      libelle: "Vêtement elfique hiver",
-      description: "Un vêtement chaud et élégant pour la saison hiver.",
-      prixDuJour: 28.99,
-      quantiteEnStock: 10,
-      estDuJour: true,
-      image: "",
-      categorieId: 1,
-    });
-  }, [user]);
+    if (!user) {
+      router.replace("/accueil");
+    }
+  }, [user, router]);
 
   // if (!token) return null;
 
@@ -185,7 +160,7 @@ export default function AccueilPerso() {
         <div className="mt-8 flex justify-end">
           <button
             onClick={() => {
-              localStorage.removeItem("gc_auth");
+              localStorage.removeItem("token");
               router.push("/accueil");
             }}
             className="text-xs text-[#6b3a1f] italic underline hover:text-[#2a1200] transition-colors cursor-pointer"

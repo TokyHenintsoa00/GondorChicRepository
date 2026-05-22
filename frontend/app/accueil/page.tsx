@@ -66,7 +66,7 @@ export default function LoginPage() {
 
       console.log(data);
       if (data.data.token) {
-        localStorage.setItem("token", JSON.stringify(data.data.token));
+        localStorage.setItem("token", data.data.token);
         router.push("/accueil-perso");
       } else {
         setError("Token manquant dans la réponse");
