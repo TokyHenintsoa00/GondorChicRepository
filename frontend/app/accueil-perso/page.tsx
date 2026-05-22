@@ -3,12 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-<<<<<<< HEAD
 import type { GcToken } from "../accueil/actions";
 import { getUserFromToken } from "@/lib/auth";
-=======
-import type { GcToken, UserLoggedIn } from "../accueil/actions";
->>>>>>> 2b9249ef22705e5e81b1681dc55ff6f6451128c5
 
 type Product = {
   id: number;
@@ -97,14 +93,9 @@ export default function AccueilPerso() {
             className="mt-4 text-[#5a3300] text-xl tracking-wide"
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
-<<<<<<< HEAD
             Bienvenue,{" "}
             <span className="font-bold">{user.sub}</span>
             {/* <span className="font-bold">{"Nicolas"}</span> */}
-=======
-            Bienvenue,{`${user?.prenom || user?.pseudo}`} !{" "}
-            <span className="font-bold">{token.pseudo}</span>
->>>>>>> 2b9249ef22705e5e81b1681dc55ff6f6451128c5
           </p>
         </div>
 
