@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { GcToken } from "../accueil/actions";
 import { getUserFromToken } from "@/lib/auth";
+import { error } from "console";
 
 type Product = {
   id: number;
@@ -27,19 +28,32 @@ export default function AccueilPerso() {
   const router = useRouter();
   const [user, setUser] = useState<{ sub: string } | null>(null);
   const [profile, setProfile] = useState<ClientProfile | null>(null);
-  const [produit] = useState<Product | null>({
-    id: 1,
-    referenceProduit: "REF-001",
-    libelle: "Vêtement elfique hiver",
-    description: "Un vêtement chaud et élégant pour la saison hiver.",
-    prixDuJour: 28.99,
-    quantiteEnStock: 10,
-    estDuJour: true,
-    image: "",
-    categorieId: 1,
-  });
+  const [products, setProducts] = useState<Product[]>([]);
   const [quantite, setQuantite] = useState(1);
   const [commande, setCommande] = useState(false);
+
+
+  async function fetchProducts() {
+    try {
+      const res = await fetch("http://localhost:8080/api/products", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Erreur API : ${res.status}`);
+      }
+
+      return await res.json();
+
+    } catch (error) {
+      console.error("Erreur fetchProducts :", error);
+      return null;
+    }
+  }
+
 
   useEffect(() => {
     const userData = getUserFromToken();
@@ -55,7 +69,15 @@ export default function AccueilPerso() {
       .then((r) => r.json())
       .then((data) => setProfile({ prenom: data.data.prenom, nom: data.data.nom }))
       .catch(() => {});
+
+    fetchProducts().then((data) => {
+      if (data) {
+        setProducts(data.data);
+      }
+    });
   }, [router]);
+
+  const todayProduct = products.filter((product) => product.estDuJour === true)[0];
 
   // if (!token) return null;
 
@@ -91,7 +113,7 @@ export default function AccueilPerso() {
         </div>
 
         {/* Produit du jour */}
-        {produit ? (
+        {todayProduct ? (
           <div className="flex gap-8 items-start">
             {/* Infos */}
             <div className="flex-1 min-w-0">
@@ -99,16 +121,16 @@ export default function AccueilPerso() {
                 className="text-3xl font-bold text-[#2a1200] mb-3"
                 style={{ fontFamily: "var(--font-cinzel)" }}
               >
-                {produit.libelle}
+                {todayProduct.libelle}
               </h1>
               <span className="inline-block bg-[#6b3a1f] text-[#f2e4c0] text-[10px] px-2.5 py-1 rounded-sm uppercase tracking-[0.15em] mb-5">
                 Produit du jour
               </span>
               <p className="text-3xl font-bold text-[#2a1200] mb-1">
-                Gondariar {produit.prixDuJour.toFixed(2)}
+                Gondariar {todayProduct.prixDuJour.toFixed(2)}
               </p>
               <p className="text-sm text-[#5a3300] italic mb-7">
-                En stock : {produit.quantiteEnStock} pièce(s)
+                En stock : {todayProduct.quantiteEnStock} pièce(s)
               </p>
 
               {/* Quantité + Acheter */}
@@ -126,7 +148,7 @@ export default function AccueilPerso() {
                   <button
                     onClick={() =>
                       setQuantite((q) =>
-                        Math.min(produit.quantiteEnStock, q + 1)
+                        Math.min(todayProduct.quantiteEnStock, q + 1)
                       )
                     }
                     className="bg-[#a8805a] text-[#f2e4c0] w-9 h-10 text-lg font-bold hover:bg-[#6b3a1f] transition-colors cursor-pointer"
@@ -152,11 +174,11 @@ export default function AccueilPerso() {
 
             {/* Image produit */}
             <div className="flex-shrink-0 w-52 h-60 border-2 border-[#2a1200] bg-white overflow-hidden flex items-center justify-center">
-              {produit.image ? (
+              {todayProduct.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={produit.image}
-                  alt={produit.libelle}
+                  src={todayProduct.image}
+                  alt={todayProduct.libelle}
                   className="w-full h-full object-cover"
                 />
               ) : (
