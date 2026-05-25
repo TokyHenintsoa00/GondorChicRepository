@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { GcToken } from "../accueil/actions";
@@ -26,7 +26,7 @@ type ClientProfile = {
 
 export default function AccueilPerso() {
   const router = useRouter();
-  const user = useMemo(() => getUserFromToken() as { sub: string } | null, []);
+  const [user, setUser] = useState<{ sub: string } | null>(null);
   const [profile, setProfile] = useState<ClientProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [quantite, setQuantite] = useState(1);
@@ -61,6 +61,7 @@ export default function AccueilPerso() {
       router.replace("/accueil");
       return;
     }
+    setUser(userData as { sub: string });
     const token = localStorage.getItem("token");
     fetch("http://localhost:8080/api/clients/me", {
       headers: { Authorization: `Bearer ${token}` },
