@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { GcToken } from "../accueil/actions";
@@ -26,7 +26,7 @@ type ClientProfile = {
 
 export default function AccueilPerso() {
   const router = useRouter();
-  const [user, setUser] = useState<{ sub: string } | null>(null);
+  const user = useMemo(() => getUserFromToken() as { sub: string } | null, []);
   const [profile, setProfile] = useState<ClientProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [quantite, setQuantite] = useState(1);
@@ -61,7 +61,6 @@ export default function AccueilPerso() {
       router.replace("/accueil");
       return;
     }
-    setUser(userData as { sub: string });
     const token = localStorage.getItem("token");
     fetch("http://localhost:8080/api/clients/me", {
       headers: { Authorization: `Bearer ${token}` },
@@ -91,19 +90,19 @@ export default function AccueilPerso() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="relative z-10 w-full max-w-2xl px-16 py-12 flex flex-col">
+      <div className="relative z-10 w-full max-w-4xl px-4 sm:px-8 md:px-16 py-10 md:py-14 flex flex-col">
         {/* Logo + Bienvenue */}
-        <div className="flex flex-col items-center mb-10">
+        <div className="flex flex-col items-center mb-12">
           <Image
             src="/logo-gondor.png"
             alt="Gondor Chic"
-            width={340}
-            height={120}
-            className="drop-shadow-sm"
+            width={460}
+            height={160}
+            className="drop-shadow-sm w-48 sm:w-72 md:w-[460px] h-auto"
             priority
           />
           <p
-            className="mt-4 text-[#5a3300] text-xl tracking-wide"
+            className="mt-5 text-[#5a3300] text-2xl tracking-wide"
             style={{ fontFamily: "var(--font-cinzel)" }}
           >
             Bienvenue,{" "}
@@ -114,26 +113,26 @@ export default function AccueilPerso() {
 
         {/* Produit du jour */}
         {todayProduct ? (
-          <div className="flex gap-8 items-start">
+          <div className="flex flex-col md:flex-row gap-8 items-start justify-center">
             {/* Infos */}
-            <div className="flex-1 min-w-0">
+            <div className="flex flex-col min-w-0 w-fit">
               <h1
-                className="text-3xl font-bold text-[#2a1200] mb-3"
+                className="text-4xl font-bold text-[#2a1200] mb-4"
                 style={{ fontFamily: "var(--font-cinzel)" }}
               >
                 {todayProduct.libelle}
               </h1>
-              <span className="inline-block bg-[#6b3a1f] text-[#f2e4c0] text-[10px] px-2.5 py-1 rounded-sm uppercase tracking-[0.15em] mb-5">
+              <span className="inline-block bg-[#6b3a1f] text-[#f2e4c0] text-[10px] px-2.5 py-1 rounded-sm uppercase tracking-[0.15em] mb-5 w-fit">
                 Produit du jour
               </span>
-              <p className="text-3xl font-bold text-[#2a1200] mb-1">
+              <p className="text-4xl font-bold text-[#2a1200] mb-2">
                 Gondariar {todayProduct.prixDuJour.toFixed(2)}
               </p>
-              <p className="text-sm text-[#5a3300] italic mb-7">
+              <p className="text-base text-[#5a3300] italic mb-8">
                 En stock : {todayProduct.quantiteEnStock} pièce(s)
               </p>
 
-              {/* Quantité + Acheter */}
+              {/* Quantité + Ajouter au panier */}
               <div className="flex items-center gap-4">
                 <div className="flex items-stretch border border-[#5a3300]">
                   <button
@@ -158,10 +157,10 @@ export default function AccueilPerso() {
                 </div>
                 <button
                   onClick={() => setCommande(true)}
-                  className="bg-[#2a1200] text-[#f2e4c0] px-10 py-2.5 text-xl rounded-sm hover:bg-[#52280a] transition-colors cursor-pointer"
+                  className="bg-[#2a1200] text-[#f2e4c0] px-5 py-2 text-sm rounded-sm hover:bg-[#52280a] transition-colors cursor-pointer"
                   style={{ fontFamily: "var(--font-cinzel)" }}
                 >
-                  Acheter
+                  Ajouter au panier
                 </button>
               </div>
 
@@ -173,7 +172,7 @@ export default function AccueilPerso() {
             </div>
 
             {/* Image produit */}
-            <div className="flex-shrink-0 w-52 h-60 border-2 border-[#2a1200] bg-white overflow-hidden flex items-center justify-center">
+            <div className="w-full md:flex-shrink-0 md:w-72 h-64 md:h-80 border-2 border-[#2a1200] bg-white overflow-hidden flex items-center justify-center">
               {todayProduct.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
