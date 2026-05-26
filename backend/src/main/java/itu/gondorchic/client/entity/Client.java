@@ -1,5 +1,6 @@
 package itu.gondorchic.client.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +35,7 @@ public class Client {
     @Column(name = "pseudo", nullable = false, length = 50)
     private String pseudo;
 
+    @JsonIgnore
     @Column(name = "mdp", nullable = false, length = 255)
     private String mdp;
 

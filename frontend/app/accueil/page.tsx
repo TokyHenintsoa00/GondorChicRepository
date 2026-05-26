@@ -64,11 +64,8 @@ export default function LoginPage() {
         return;
       }
 
-      // console.log("data", data.data);
-
       if (data.data.token) {
-        localStorage.setItem("gc_auth", JSON.stringify(data.data.token));
-        localStorage.setItem("userPseudo", JSON.stringify(data.data.client));
+        localStorage.setItem("token", data.data.token);
         router.push("/accueil-perso");
       } else {
         setError("Token manquant dans la réponse");

@@ -1,0 +1,22 @@
+erDiagram
+    Client {
+        SERIAL       id
+        VARCHAR(10)  numero_client
+        VARCHAR(100) nom
+        VARCHAR(100) prenom
+        VARCHAR(50)  pseudo
+        VARCHAR(255) mdp
+        VARCHAR(255) adresse_livraison
+        VARCHAR(255) adresse_facturation
+    }
+
+    Produit {
+        SERIAL       id
+        VARCHAR(10)  reference_produit
+        VARCHAR(100) libelle
+        TEXT         description
+        DECIMAL      prix_du_jour
+        INT          quantite_en_stock
+        BOOLEAN      est_du_jour
+        VARCHAR(255) image
+    }
