@@ -1,3 +1,6 @@
+# UML — Base de données Gondor Chic
+
+```mermaid
 erDiagram
     Client {
         SERIAL       id
@@ -20,3 +23,4 @@ erDiagram
         BOOLEAN      est_du_jour
         VARCHAR(255) image
     }
+```
