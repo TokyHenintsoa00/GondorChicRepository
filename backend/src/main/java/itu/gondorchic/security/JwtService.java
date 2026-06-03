@@ -1,7 +1,11 @@
 package itu.gondorchic.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +15,8 @@ import java.util.Date;
 
 @Component
 public class JwtService {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     private final SecretKey secretKey;
     private final long expirationMs;
@@ -44,7 +50,11 @@ public class JwtService {
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
+            log.warn("Token expiré : {}", e.getMessage());
+            return false;
+        } catch (JwtException e) {
+            log.warn("Token invalide : {}", e.getMessage());
             return false;
         }
     }
